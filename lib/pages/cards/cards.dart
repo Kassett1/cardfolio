@@ -61,6 +61,78 @@ class CardsPage extends StatelessWidget {
                       'SV Obsidian Flames',
                     ],
                   ),
+                  ExtensionList(
+                    title: 'Écarlate et Violet',
+                    items: [
+                      'SV Base',
+                      'SV Paldea Evolved',
+                      'SV Obsidian Flames',
+                    ],
+                  ),
+                  ExtensionList(
+                    title: 'Écarlate et Violet',
+                    items: [
+                      'SV Base',
+                      'SV Paldea Evolved',
+                      'SV Obsidian Flames',
+                    ],
+                  ),
+                  ExtensionList(
+                    title: 'Écarlate et Violet',
+                    items: [
+                      'SV Base',
+                      'SV Paldea Evolved',
+                      'SV Obsidian Flames',
+                    ],
+                  ),
+                  ExtensionList(
+                    title: 'Écarlate et Violet',
+                    items: [
+                      'SV Base',
+                      'SV Paldea Evolved',
+                      'SV Obsidian Flames',
+                    ],
+                  ),
+                  ExtensionList(
+                    title: 'Écarlate et Violet',
+                    items: [
+                      'SV Base',
+                      'SV Paldea Evolved',
+                      'SV Obsidian Flames',
+                    ],
+                  ),
+                  ExtensionList(
+                    title: 'Écarlate et Violet',
+                    items: [
+                      'SV Base',
+                      'SV Paldea Evolved',
+                      'SV Obsidian Flames',
+                    ],
+                  ),
+                  ExtensionList(
+                    title: 'Écarlate et Violet',
+                    items: [
+                      'SV Base',
+                      'SV Paldea Evolved',
+                      'SV Obsidian Flames',
+                    ],
+                  ),
+                  ExtensionList(
+                    title: 'Écarlate et Violet',
+                    items: [
+                      'SV Base',
+                      'SV Paldea Evolved',
+                      'SV Obsidian Flames',
+                    ],
+                  ),
+                  ExtensionList(
+                    title: 'Écarlate et Violet',
+                    items: [
+                      'SV Base',
+                      'SV Paldea Evolved',
+                      'SV Obsidian Flames',
+                    ],
+                  ),
                 ],
               ),
             ),
