@@ -29,12 +29,22 @@ class _ExtensionListState extends State<ExtensionList>
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: _open
-              ? AppColors.secondary.withValues(alpha: 0.5)
-              : AppColors.background.withValues(alpha: 0.8),
+          gradient: RadialGradient(
+            colors: _open
+                ? [
+                    AppColors.secondary.withValues(alpha: 0.2),
+                    AppColors.secondary.withValues(alpha: 0.6),
+                  ]
+                : [
+                    AppColors.secondary.withValues(alpha: 0.2),
+                    AppColors.secondary.withValues(alpha: 0.6),
+                  ],
+            center: Alignment.topLeft,
+            radius: 1.2,
+          ),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: _open ? AppColors.secondary : AppColors.primary,
+            color: AppColors.secondary.withValues(alpha: 0.2),
             width: 2,
           ),
         ),
@@ -55,7 +65,7 @@ class _ExtensionListState extends State<ExtensionList>
                       style: const TextStyle(
                         fontFamily: 'LuckiestGuy',
                         fontSize: 18,
-                        color: AppColors.primary,
+                        color: AppColors.text,
                       ),
                     ),
                     AnimatedRotation(
@@ -87,7 +97,7 @@ class _ExtensionListState extends State<ExtensionList>
                                 padding: const EdgeInsets.only(top: 6),
                                 child: Text(
                                   t,
-                                  style: const TextStyle(color: AppColors.primary),
+                                  style: const TextStyle(color: AppColors.text),
                                 ),
                               ),
                             )

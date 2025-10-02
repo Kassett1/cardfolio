@@ -1,6 +1,9 @@
 import 'package:cardfolio/pages/cards/widgets/extension_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:cardfolio/models/pokemon_set.dart';
+import 'package:cardfolio/services/tcg_api.dart';
+import 'package:cardfolio/utils/helpers.dart';
 
 class CardsPage extends StatelessWidget {
   const CardsPage({super.key});
@@ -36,109 +39,34 @@ class CardsPage extends StatelessWidget {
         ],
       ),
 
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            SvgPicture.asset(
-              'assets/icons/line.svg',
-              width: MediaQuery.of(context).size.width,
-            ),
-            Positioned(
-              bottom: 100,
-              child: SvgPicture.asset(
-                'assets/icons/line.svg',
-                width: MediaQuery.of(context).size.width,
-              ),
-            ),
-            SafeArea(
+      body: FutureBuilder<List<PokemonSet>>(
+        future: TcgApi().fetchSets(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text("Erreur : ${snapshot.error}"));
+          }
+
+          final sets = snapshot.data!;
+          final grouped = groupAndSortByBloc(sets);
+
+          return SingleChildScrollView(
+            child: SafeArea(
               child: Column(
-                children: [
-                  ExtensionList(
-                    title: 'Écarlate et Violet',
-                    items: [
-                      'SV Base',
-                      'SV Paldea Evolved',
-                      'SV Obsidian Flames',
-                    ],
-                  ),
-                  ExtensionList(
-                    title: 'Écarlate et Violet',
-                    items: [
-                      'SV Base',
-                      'SV Paldea Evolved',
-                      'SV Obsidian Flames',
-                    ],
-                  ),
-                  ExtensionList(
-                    title: 'Écarlate et Violet',
-                    items: [
-                      'SV Base',
-                      'SV Paldea Evolved',
-                      'SV Obsidian Flames',
-                    ],
-                  ),
-                  ExtensionList(
-                    title: 'Écarlate et Violet',
-                    items: [
-                      'SV Base',
-                      'SV Paldea Evolved',
-                      'SV Obsidian Flames',
-                    ],
-                  ),
-                  ExtensionList(
-                    title: 'Écarlate et Violet',
-                    items: [
-                      'SV Base',
-                      'SV Paldea Evolved',
-                      'SV Obsidian Flames',
-                    ],
-                  ),
-                  ExtensionList(
-                    title: 'Écarlate et Violet',
-                    items: [
-                      'SV Base',
-                      'SV Paldea Evolved',
-                      'SV Obsidian Flames',
-                    ],
-                  ),
-                  ExtensionList(
-                    title: 'Écarlate et Violet',
-                    items: [
-                      'SV Base',
-                      'SV Paldea Evolved',
-                      'SV Obsidian Flames',
-                    ],
-                  ),
-                  ExtensionList(
-                    title: 'Écarlate et Violet',
-                    items: [
-                      'SV Base',
-                      'SV Paldea Evolved',
-                      'SV Obsidian Flames',
-                    ],
-                  ),
-                  ExtensionList(
-                    title: 'Écarlate et Violet',
-                    items: [
-                      'SV Base',
-                      'SV Paldea Evolved',
-                      'SV Obsidian Flames',
-                    ],
-                  ),
-                  ExtensionList(
-                    title: 'Écarlate et Violet',
-                    items: [
-                      'SV Base',
-                      'SV Paldea Evolved',
-                      'SV Obsidian Flames',
-                    ],
-                  ),
-                ],
+                children: grouped.entries.map((entry) {
+                  return ExtensionList(
+                    title: entry.key,
+                    items: entry.value.map((s) => s.name).toList(),
+                  );
+                }).toList(),
               ),
             ),
-          ],
-        ),
+          );
+        },
       ),
+
       bottomNavigationBar: NavigationBar(),
     );
   }

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:cardfolio/pages/cards/cards.dart';
 import 'package:cardfolio/pages/constants/app_colors.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+
+Future<void> main() async {
+  // On charge le .env AVANT runApp
+  await dotenv.load(fileName: ".env");
+
   runApp(const MyApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -19,11 +23,11 @@ class MyApp extends StatelessWidget {
         primaryColor: AppColors.primary, // couleur "principale"
         iconTheme: IconThemeData(color: AppColors.primary), // icônes globales
         textTheme: TextTheme(
-          bodyMedium: TextStyle(color: AppColors.primary), // texte par défaut
+          bodyMedium: TextStyle(color: AppColors.text), // texte par défaut
           bodyLarge: TextStyle(color: AppColors.primary),
         ),
         appBarTheme: AppBarTheme(
-          backgroundColor: Colors.transparent,
+          backgroundColor: AppColors.background,
           foregroundColor: AppColors.primary, // AppBar aussi
           elevation: 0,
         ),
