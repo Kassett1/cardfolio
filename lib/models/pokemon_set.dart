@@ -19,4 +19,13 @@ class PokemonSet {
       symbol: (json['images']?['symbol'] ?? '') as String,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'series': series,
+      'symbol' : symbol,
+    };
+  }
 }

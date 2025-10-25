@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
           selectedItemColor: AppColors.primary,
           elevation: 0,
           showSelectedLabels: false,
-          showUnselectedLabels: false,
+          showUnselectedLabels: false, 
         ),
       ),
       home: CardsPage(),
