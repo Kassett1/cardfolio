@@ -13,26 +13,25 @@ class CardsPage extends StatefulWidget {
 }
 
 class _CardsPageState extends State<CardsPage> {
-  final _api = TcgApi();
-
-  late Future<List<PokemonSet>> _futureSets;
-  bool _isRefreshing = false;
+  final _api = TcgApi(); // API + gestion cache
+  late Future<List<PokemonSet>> _futureSets; // Données affichées
+  bool _isRefreshing = false; // Indique si on charge depuis l’API
 
   @override
   void initState() {
     super.initState();
-    _futureSets = _api.getSetsFromCache();
+    _futureSets = _api
+        .getSetsFromCache(); // Charge depuis le cache au démarrage
   }
 
   Future<void> _onRefreshPressed() async {
-    if (_isRefreshing) return;
-
-    setState(() => _isRefreshing = true);
+    if (_isRefreshing) return; // Évite les doubles clics
+    setState(() => _isRefreshing = true); // Active le spinner
 
     try {
-      final fresh = await _api.forceRefresh();
+      final fresh = await _api.forceRefresh(); // Télécharge depuis l’API
       setState(() {
-        _futureSets = Future.value(fresh);
+        _futureSets = Future.value(fresh); // Met à jour l’affichage
         _isRefreshing = false;
       });
     } catch (e) {
@@ -43,15 +42,14 @@ class _CardsPageState extends State<CardsPage> {
     }
   }
 
-  /// 🔹 Nouveau : vider le cache local
   Future<void> _onClearCachePressed() async {
-    await _api.clearSetsCache();
+    await _api.clearSetsCache(); // Vide le cache local
     setState(() {
-      _futureSets = Future.value([]); // on vide les données affichées
+      _futureSets = Future.value([]); // Vide l’écran
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Cache vidé ✅')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Cache vidé ✅')));
   }
 
   @override
@@ -62,13 +60,10 @@ class _CardsPageState extends State<CardsPage> {
       appBar: AppBar(
         title: Text(
           'Cartes',
-          style: const TextStyle(
-            fontFamily: 'LuckiestGuy',
-            fontSize: 30,
-          ),
+          style: const TextStyle(fontFamily: 'LuckiestGuy', fontSize: 30),
         ),
         actions: [
-          // Bouton refresh (avec spinner si en cours)
+          // Bouton de rafraîchissement
           IconButton(
             tooltip: 'Rafraîchir les sets depuis l’API',
             onPressed: _onRefreshPressed,
@@ -81,13 +76,14 @@ class _CardsPageState extends State<CardsPage> {
                 : const Icon(Icons.refresh, size: 24),
           ),
 
-          // 🔹 Nouveau : bouton pour vider le cache
+          // Bouton pour vider le cache
           IconButton(
             tooltip: 'Vider le cache local',
             onPressed: _onClearCachePressed,
             icon: const Icon(Icons.delete_outline, size: 24),
           ),
 
+          // Boutons profil et paramètres
           IconButton(
             icon: SvgPicture.asset(
               'assets/icons/profile.svg',
@@ -110,10 +106,12 @@ class _CardsPageState extends State<CardsPage> {
       ),
 
       body: FutureBuilder<List<PokemonSet>>(
-        future: _futureSets,
+        future: _futureSets, // Observe les données
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(),
+            ); // Loader initial
           }
 
           if (snapshot.hasError) {
@@ -130,30 +128,32 @@ class _CardsPageState extends State<CardsPage> {
 
           if (sets.isEmpty) {
             if (_isRefreshing) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                child: CircularProgressIndicator(),
+              ); // Loader quand on recharge
             }
-
             return SafeArea(
-              child: _EmptyCacheView(onRefresh: _onRefreshPressed),
+              child: _EmptyCacheView(
+                onRefresh: _onRefreshPressed,
+              ), // Écran vide
             );
           }
 
-          final grouped = groupAndSortByBloc(sets);
+          final grouped = groupAndSortByBloc(sets); // Trie les sets par bloc
 
           return Stack(
             children: [
+              // Liste des extensions
               SingleChildScrollView(
                 child: SafeArea(
                   child: Column(
                     children: grouped.entries.map((entry) {
-                      return ExtensionList(
-                        title: entry.key,
-                        items: entry.value.map((s) => s.name).toList(),
-                      );
+                      return ExtensionList(title: entry.key, sets: entry.value);
                     }).toList(),
                   ),
                 ),
               ),
+              // Overlay "Mise à jour…" en bas
               if (_isRefreshing)
                 Positioned(
                   bottom: 16,
@@ -197,13 +197,14 @@ class _CardsPageState extends State<CardsPage> {
         },
       ),
 
-      bottomNavigationBar: NavigationBar(),
+      bottomNavigationBar: NavigationBar(), // Barre du bas
     );
   }
 
   Widget NavigationBar() {
     return BottomNavigationBar(
       items: [
+        // Icônes du bas
         BottomNavigationBarItem(
           label: 'cards',
           icon: SvgPicture.asset(
@@ -233,6 +234,7 @@ class _CardsPageState extends State<CardsPage> {
   }
 }
 
+// Écran quand le cache est vide
 class _EmptyCacheView extends StatelessWidget {
   final VoidCallback onRefresh;
   const _EmptyCacheView({required this.onRefresh});
@@ -248,13 +250,12 @@ class _EmptyCacheView extends StatelessWidget {
             const Text(
               "Aucune extension en cache.",
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 12),
             const Text(
-              "Appuie sur le bouton pour récupérer les sets depuis l'API.",
+              "Appuie sur le bouton pour récupérer les sets.",
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: Colors.grey),
+              style: TextStyle(color: Colors.grey),
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
@@ -269,6 +270,7 @@ class _EmptyCacheView extends StatelessWidget {
   }
 }
 
+// Écran d’erreur
 class _ErrorView extends StatelessWidget {
   final String message;
   final bool isRefreshing;
@@ -282,7 +284,9 @@ class _ErrorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isRefreshing) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(
+        child: CircularProgressIndicator(),
+      ); // Si déjà en reload
     }
 
     return Center(
@@ -294,7 +298,7 @@ class _ErrorView extends StatelessWidget {
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16, color: Colors.red),
+              style: const TextStyle(color: Colors.red),
             ),
             const SizedBox(height: 16),
             ElevatedButton.icon(
